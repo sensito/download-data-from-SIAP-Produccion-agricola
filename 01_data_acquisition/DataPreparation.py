@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[13]:
 
 
 import pandas as pd
@@ -18,39 +18,12 @@ import urllib
 # 
 # ---
 
-# In[2]:
+# In[9]:
 
 
-def downloaddata_1(dest_Folder, name_Statistics, dictionary_Name):
-    
-    url_Estadistica_Produccion_Agricola = "http://infosiap.siap.gob.mx/gobmx/datosAbiertos/ProduccionAgricola/Cierre_agricola_"
-    url_Diccionario_Produccion_Agricola = "http://infosiap.siap.gob.mx/gobmx/datosAbiertos/ProduccionAgricola/Diccionario%20agr%C3%ADcola%201980%20a%202002.xlsx"
-    
-    extension_Estadistica = ".csv"
-    extension_Diccionario = ".xlsx"
-    
-    nombre_Estadistica_Produccion_Agricola = dest_Folder + name_Statistics
-    nombre_Diccionario_Produccion_Agricola = dest_Folder + dictionary_Name
-
-    maximo = 2002
-    minimo = 1980
-    
-    for key in tqdm(range(minimo, maximo + 1)):
-        
-        url_Produccion = url_Estadistica_Produccion_Agricola + str(key) + extension_Estadistica
-        df = pd.read_csv(url_Produccion, encoding='latin-1')
-        df.to_csv(nombre_Estadistica_Produccion_Agricola + str(key) + extension_Estadistica)
-        
-        if key == maximo:
-            urllib.request.urlretrieve(url_Diccionario_Produccion_Agricola, nombre_Diccionario_Produccion_Agricola + extension_Diccionario)
-
-
-# In[3]:
-
-
-def downloaddata_2(dest_Folder, name_Statistics, dictionary_Name):    
-    url_Estadistica_Produccion_Agricola = "http://infosiap.siap.gob.mx/gobmx/datosAbiertos/ProduccionAgricola/Cierre_agricola_mun_"
-    url_Diccionario_Produccion_Agricola = "http://infosiap.siap.gob.mx/gobmx/datosAbiertos/ProduccionAgricola/Diccionario%20agr%C3%ADcola%202003%20a%202017.xlsx"
+def downloaddata(dest_Folder, url_Estadistica_Produccion_Agricola, url_Diccionario_Produccion_Agricola, option):    
+    name_Statistics = "/Estadistica_de_la_Produccion_Agricola_de_"
+    dictionary_Name = "/Diccionario_de_datos_para_Estadistica_de_Produccion_Agricola"
     
     extension_Estadistica = ".csv"
     extension_Diccionario = ".xlsx"
@@ -58,8 +31,7 @@ def downloaddata_2(dest_Folder, name_Statistics, dictionary_Name):
     nombre_Estadistica_Produccion_Agricola = dest_Folder + name_Statistics
     nombre_Diccionario_Produccion_Agricola = dest_Folder + dictionary_Name
 
-    maximo = 2019
-    minimo = 2003
+    maximo, minimo = rango_datos(option)
     
     for key in tqdm(range(minimo, maximo + 1)):
         
@@ -67,6 +39,16 @@ def downloaddata_2(dest_Folder, name_Statistics, dictionary_Name):
         df = pd.read_csv(url_Produccion, encoding='latin-1')
         df.to_csv(nombre_Estadistica_Produccion_Agricola + str(key) + extension_Estadistica)
         
-        if key == maximo:
+        if key == minimo:
             urllib.request.urlretrieve(url_Diccionario_Produccion_Agricola, nombre_Diccionario_Produccion_Agricola + extension_Diccionario)
+
+
+# In[10]:
+
+
+def rango_datos(option):
+    if option == 1:
+        return 2002, 1980
+    if option == 2:
+        return 2019,2003
 
